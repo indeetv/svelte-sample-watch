@@ -45,7 +45,7 @@
 			<img
 				alt="Your Company Logo"
 				src={$productConfigStoreSnapshot.companyLogo}
-				class="mx-auto h-10 w-auto"
+				class="mx-auto h-16 w-auto"
 			/>
 			<h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
 				Sign in to your account
