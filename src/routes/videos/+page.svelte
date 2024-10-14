@@ -17,13 +17,13 @@
 
 	onMount(async () => {
 		if ($loginStoreSnapshot.authToken) {
+			videosStoreSnapshot.resetVideoStore();
 			selectedProject =
 				(await projectsStoreSnapshot.fetchProjectDetails(
 					`${$metaConfigStoreSnapshot.host}${$metaConfigStoreSnapshot.endpoints['watch.content.project.retrieve']}`,
 					$loginStoreSnapshot.authToken,
 					$page.url.searchParams.get('project') || ''
 				)) || '';
-			videosStoreSnapshot.resetVideoStore();
 			await videosStoreSnapshot.fetchVideoData(
 				`${$metaConfigStoreSnapshot.host}${$metaConfigStoreSnapshot.endpoints['watch.content.videos.list']}`,
 				$loginStoreSnapshot.authToken,

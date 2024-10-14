@@ -16,13 +16,13 @@
 
 	onMount(async () => {
 		if ($loginStoreSnapshot.authToken) {
+			projectsStoreSnapshot.resetProjectStore();
 			selectedBrand =
 				(await brandsStoreSnapshot.fetchBrandDetails(
 					`${$metaConfigStoreSnapshot.host}${$metaConfigStoreSnapshot.endpoints['watch.content.brand.retrieve']}`,
 					$page.url.searchParams.get('brand') || '',
 					$loginStoreSnapshot.authToken
 				)) || '';
-			projectsStoreSnapshot.resetProjectStore();
 			await projectsStoreSnapshot.fetchProjectData(
 				`${$metaConfigStoreSnapshot.host}${$metaConfigStoreSnapshot.endpoints['watch.content.project.list']}`,
 				$loginStoreSnapshot.authToken,
