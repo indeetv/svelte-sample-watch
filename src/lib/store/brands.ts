@@ -1,7 +1,7 @@
 import { writable } from 'svelte/store';
 import { fetchManager } from '$lib/utils/fetchManager';
 import type { BrandData, BrandEntity } from './types/brands';
-import { goto } from '$app/navigation';
+import { loginStoreSnapshot } from './login';
 
 function brandsStore() {
 	const { subscribe, update } = writable<{
@@ -20,11 +20,13 @@ function brandsStore() {
 
 		if (error) {
 			console.warn('Brand Data Fetch Failed');
-			if (error.status_code === 'W2003') goto('/login');
+			if (error.status_code === 'W2003') {
+				loginStoreSnapshot.handleTokenExpiry();
+			}
 		} else {
-			update(() => {
+			update((oldVal) => {
 				return {
-					brandData: (data as BrandData).results,
+					brandData: [...oldVal.brandData, ...(data as BrandData).results],
 					hasNextUrl: (data as BrandData).next
 				};
 			});

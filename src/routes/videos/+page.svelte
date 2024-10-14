@@ -44,7 +44,9 @@
 						'start date': generateDateStringFromEpoch(data.screening_details.start_date),
 						'expiry date': generateDateStringFromEpoch(data.screening_details.expiry_date),
 						expired: data.screening_details.expired,
-						'Screener Key': data.screening_details.screener_key || 'Not Generated'
+						'Screener Key': data.screening_details.screener_key || 'Not Generated',
+						'remaining views':
+							data.screening_details.max_views - data.screening_details.views_consumed
 					};
 				})}
 			></ContentTable>

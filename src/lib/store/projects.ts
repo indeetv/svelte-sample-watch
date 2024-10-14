@@ -1,7 +1,7 @@
 import { writable } from 'svelte/store';
 import { fetchManager } from '$lib/utils/fetchManager';
 import type { ProjectData, ProjectEntity } from './types/projects';
-import { goto } from '$app/navigation';
+import { loginStoreSnapshot } from './login';
 
 function projectsStore() {
 	const { subscribe, update } = writable<{
@@ -20,7 +20,9 @@ function projectsStore() {
 
 		if (error) {
 			console.warn('Project Data Fetch Failed');
-			if (error.status_code === 'W2003') goto('/login');
+			if (error.status_code === 'W2003') {
+				loginStoreSnapshot.handleTokenExpiry();
+			}
 		} else {
 			update(() => {
 				return {

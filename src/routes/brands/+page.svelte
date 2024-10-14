@@ -19,6 +19,13 @@
 			await goto('/login');
 		}
 	});
+
+	const handleBrandsPagination = async () => {
+		await brandsStoreSnapshot.fetchBrandData(
+			$brandsStoreSnapshot.hasNextUrl,
+			$loginStoreSnapshot.authToken
+		);
+	};
 </script>
 
 {#if !$brandsStoreSnapshot.brandData.length}
@@ -35,6 +42,16 @@
 				queryNameToAdd="brand"
 				tableData={$brandsStoreSnapshot.brandData}
 			></ContentTable>
+			{#if $brandsStoreSnapshot.hasNextUrl}
+				<div class="text-center">
+					<button
+						class="text-blue-500 text-center p-5 underline underline-offset-2 cursor-pointer"
+						on:click={handleBrandsPagination}
+					>
+						Load More Brands...
+					</button>
+				</div>
+			{/if}
 		</div>
 	</div>
 {/if}

@@ -2,6 +2,7 @@ import { writable } from 'svelte/store';
 import { fetchManager } from '$lib/utils/fetchManager';
 import { PUBLIC_API_KEY } from '$env/static/public';
 import type { PasswordCredentials, PinCredentials } from './types/login';
+import { goto } from '$app/navigation';
 
 function loginStore() {
 	const { subscribe, update } = writable({
@@ -84,6 +85,8 @@ function loginStore() {
 				logoutApiCalled: false
 			};
 		});
+		window.localStorage.removeItem('token');
+		window.localStorage.removeItem('refresh_token');
 	};
 
 	const getTokenfromLocalStorage = () => {
@@ -101,12 +104,28 @@ function loginStore() {
 		}
 	};
 
+	const handleTokenExpiry = () => {
+		update(() => {
+			return {
+				authToken: '',
+				refreshToken: '',
+				loginErrorMessage: 'Your session has expired',
+				loginApiCalled: false,
+				logoutApiCalled: false
+			};
+		});
+		window.localStorage.removeItem('token');
+		window.localStorage.removeItem('refresh_token');
+		goto('/login');
+	};
+
 	return {
 		subscribe,
 		handleLogin,
 		handleLogout,
 		update,
-		getTokenfromLocalStorage
+		getTokenfromLocalStorage,
+		handleTokenExpiry
 	};
 }
 

@@ -1,7 +1,7 @@
 import { writable } from 'svelte/store';
 import { fetchManager } from '$lib/utils/fetchManager';
 import type { VideoData, VideoEntity } from './types/videos';
-import { goto } from '$app/navigation';
+import { loginStoreSnapshot } from './login';
 
 function videosStore() {
 	const { subscribe, update } = writable<{
@@ -20,7 +20,9 @@ function videosStore() {
 
 		if (error) {
 			console.warn('Video Data Fetch Failed');
-			if (error.status_code === 'W2003') goto('/login');
+			if (error.status_code === 'W2003') {
+				loginStoreSnapshot.handleTokenExpiry();
+			}
 		} else {
 			update(() => {
 				return {
@@ -47,7 +49,9 @@ function videosStore() {
 
 		if (error) {
 			console.warn('Video Details Data Fetch Failed');
-			if (error.status_code === 'W2003') goto('/login');
+			if (error.status_code === 'W2003') {
+				loginStoreSnapshot.handleTokenExpiry();
+			}
 		} else {
 			return (data as VideoEntity).screening_details.screener_key;
 		}

@@ -2,7 +2,7 @@ import { writable } from 'svelte/store';
 import { fetchManager } from '$lib/utils/fetchManager';
 import { PUBLIC_API_KEY } from '$env/static/public';
 import type { PlaybackData } from './types/playback';
-import { goto } from '$app/navigation';
+import { loginStoreSnapshot } from './login';
 
 function playbackStore() {
 	const { subscribe, update } = writable<{
@@ -78,7 +78,9 @@ function playbackStore() {
 
 		if (error) {
 			console.warn('Playback Data Fetch Failed');
-			if (error.status_code === 'W2003') goto('/login');
+			if (error.status_code === 'W2003') {
+				loginStoreSnapshot.handleTokenExpiry();
+			}
 
 			update((oldVal) => {
 				return {

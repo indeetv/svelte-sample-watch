@@ -17,7 +17,7 @@
 		Object.keys(item).filter((header) => header !== 'name');
 </script>
 
-<table class="min-w-full border-collapse border border-gray-200">
+<table class="min-w-full border-collapse border border-gray-200 mb-16">
 	<thead>
 		<tr>
 			{#if tableData.length > 0}
