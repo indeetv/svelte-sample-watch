@@ -12,11 +12,16 @@ function videosStore() {
 		hasVideoNextUrl: ''
 	});
 
-	const fetchVideoData = async (endpoint: string, authToken: string, projectKey: string) => {
-		const { data, error } = await fetchManager(endpoint.replace('<str:project_key>', projectKey), {
-			method: 'GET',
-			headers: { authorization: `JWT ${authToken}` }
-		});
+	const fetchVideoData = async (endpoint: string, authToken: string, projectKey?: string) => {
+		const { data, error } = await fetchManager(
+			endpoint.includes('<str:')
+				? endpoint.replace('<str:project_key>', projectKey || '')
+				: endpoint,
+			{
+				method: 'GET',
+				headers: { authorization: `JWT ${authToken}` }
+			}
+		);
 
 		if (error) {
 			console.warn('Video Data Fetch Failed');
@@ -24,9 +29,9 @@ function videosStore() {
 				loginStoreSnapshot.handleTokenExpiry();
 			}
 		} else {
-			update(() => {
+			update((oldVal) => {
 				return {
-					videoData: (data as VideoData).results,
+					videoData: [...oldVal.videoData, ...(data as VideoData).results],
 					hasVideoNextUrl: (data as VideoData).next
 				};
 			});

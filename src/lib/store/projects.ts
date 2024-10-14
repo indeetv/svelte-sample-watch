@@ -12,11 +12,14 @@ function projectsStore() {
 		hasProjectNextUrl: ''
 	});
 
-	const fetchProjectData = async (endpoint: string, authToken: string, brandKey: string) => {
-		const { data, error } = await fetchManager(`${endpoint}?brand=${brandKey}`, {
-			method: 'GET',
-			headers: { authorization: `JWT ${authToken}` }
-		});
+	const fetchProjectData = async (endpoint: string, authToken: string, brandKey?: string) => {
+		const { data, error } = await fetchManager(
+			`${endpoint}${brandKey ? `?brand=${brandKey}` : ''}`,
+			{
+				method: 'GET',
+				headers: { authorization: `JWT ${authToken}` }
+			}
+		);
 
 		if (error) {
 			console.warn('Project Data Fetch Failed');
@@ -24,9 +27,9 @@ function projectsStore() {
 				loginStoreSnapshot.handleTokenExpiry();
 			}
 		} else {
-			update(() => {
+			update((oldVal) => {
 				return {
-					projectData: (data as ProjectData).results,
+					projectData: [...oldVal.projectData, ...(data as ProjectData).results],
 					hasProjectNextUrl: (data as ProjectData).next
 				};
 			});

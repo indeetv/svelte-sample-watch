@@ -9,6 +9,9 @@
 	import { generateDateStringFromEpoch } from '$lib/utils/generateDateStringFromEpoch';
 	import Loader from '../../components/Loader.svelte';
 	import { metaConfigStoreSnapshot } from '$lib/store/meta-config';
+	import ContentLoader from '../../components/ContentLoader.svelte';
+
+	let paginatedCallOngoing = false;
 
 	onMount(async () => {
 		if ($loginStoreSnapshot.authToken) {
@@ -22,6 +25,15 @@
 			await goto('/login');
 		}
 	});
+
+	const handleVideoPagination = async () => {
+		paginatedCallOngoing = true;
+		await videosStoreSnapshot.fetchVideoData(
+			$videosStoreSnapshot.hasVideoNextUrl,
+			$loginStoreSnapshot.authToken
+		);
+		paginatedCallOngoing = false;
+	};
 </script>
 
 {#if !$videosStoreSnapshot.videoData.length}
@@ -50,6 +62,22 @@
 					};
 				})}
 			></ContentTable>
+			{#if $videosStoreSnapshot.hasVideoNextUrl && !paginatedCallOngoing}
+				<div class="text-center">
+					<button
+						class="text-blue-500 text-center p-5 underline underline-offset-2 cursor-pointer"
+						on:click={handleVideoPagination}
+					>
+						Load More Videos...
+					</button>
+				</div>
+			{/if}
+			{#if paginatedCallOngoing}
+				<ContentLoader></ContentLoader>
+			{/if}
+			{#if !paginatedCallOngoing && !$videosStoreSnapshot.hasVideoNextUrl}
+				<div class="mb-16"></div>
+			{/if}
 		</div>
 	</div>
 {/if}

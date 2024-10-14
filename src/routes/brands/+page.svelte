@@ -7,10 +7,13 @@
 	import Navbar from '../../components/Navbar.svelte';
 	import Loader from '../../components/Loader.svelte';
 	import { metaConfigStoreSnapshot } from '$lib/store/meta-config';
-	import { browser } from '$app/environment';
+	import ContentLoader from '../../components/ContentLoader.svelte';
+
+	let paginatedCallOngoing = false;
 
 	onMount(async () => {
 		if ($loginStoreSnapshot.authToken) {
+			brandsStoreSnapshot.resetBrandStore();
 			await brandsStoreSnapshot.fetchBrandData(
 				`${$metaConfigStoreSnapshot.host}${$metaConfigStoreSnapshot.endpoints['watch.content.brand.list']}`,
 				$loginStoreSnapshot.authToken
@@ -21,10 +24,12 @@
 	});
 
 	const handleBrandsPagination = async () => {
+		paginatedCallOngoing = true;
 		await brandsStoreSnapshot.fetchBrandData(
 			$brandsStoreSnapshot.hasNextUrl,
 			$loginStoreSnapshot.authToken
 		);
+		paginatedCallOngoing = false;
 	};
 </script>
 
@@ -42,7 +47,7 @@
 				queryNameToAdd="brand"
 				tableData={$brandsStoreSnapshot.brandData}
 			></ContentTable>
-			{#if $brandsStoreSnapshot.hasNextUrl}
+			{#if $brandsStoreSnapshot.hasNextUrl && !paginatedCallOngoing}
 				<div class="text-center">
 					<button
 						class="text-blue-500 text-center p-5 underline underline-offset-2 cursor-pointer"
@@ -51,6 +56,12 @@
 						Load More Brands...
 					</button>
 				</div>
+			{/if}
+			{#if paginatedCallOngoing}
+				<ContentLoader></ContentLoader>
+			{/if}
+			{#if !paginatedCallOngoing && !$brandsStoreSnapshot.hasNextUrl}
+				<div class="mb-16"></div>
 			{/if}
 		</div>
 	</div>

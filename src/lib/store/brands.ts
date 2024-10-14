@@ -33,9 +33,19 @@ function brandsStore() {
 		}
 	};
 
+	const resetBrandStore = () => {
+		update(() => {
+			return {
+				brandData: [],
+				hasNextUrl: ''
+			};
+		});
+	};
+
 	return {
 		subscribe,
-		fetchBrandData
+		fetchBrandData,
+		resetBrandStore
 	};
 }
 
