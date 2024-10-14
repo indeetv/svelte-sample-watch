@@ -1,38 +1,87 @@
-# create-svelte
+# Indee Watch 2.1 API Demo (SvelteKit)
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/main/packages/create-svelte).
+## Overview
 
-## Creating a project
+This repository contains a demonstration of the Indee Watch 2.1 API using a SvelteKit application. The demo showcases the following capabilities:
 
-If you're seeing this, you've probably already done this step. Congrats!
+- Displaying brands, projects, and videos associated with a given FYC (For Your Consideration) token in a tabular format.
+- Automatic detection of API keys for screeners or Global Distribution, prompting for username and password to display corresponding data.
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
+## Important Notice
 
-# create a new project in my-app
-npm create svelte@latest my-app
-```
+**⚠️ This code is intended for demonstration purposes only. ⚠️**
 
-## Developing
+Do not use API keys directly in client-side applications. For production use, always store API keys securely on your server and use them to establish the initial session through the `login` API.
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+## Prerequisites
 
-```bash
-npm run dev
+Before running the demo, ensure you have the following:
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
+- Node.js installed on your system (version specified in `.nvmrc`)
+- API key and endpoint provided by Indee
 
-## Building
+## Setup
 
-To create a production version of your app:
+1. Clone this repository to your local machine.
+2. Navigate to the project directory.
+3. Update the following environment variables in your `.env` file:
+   - Replace `PUBLIC_API_KEY` with your provided API key.
+   - Replace `PUBLIC_API_ENDPOINT` with the API endpoint from the Indee API documentation.
 
-```bash
-npm run build
-```
+## Installation
 
-You can preview the production build with `npm run preview`.
+1. Install the required Node.js version
+2. Install dependencies:
+   ```
+   npm install
+   ```
 
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+## Running the Demo
+
+1. Start the development server:
+   ```
+   npm run dev
+   ```
+2. Open your browser and navigate to [http://localhost:3000](http://localhost:3000).
+3. You should see the login page. Use your credentials to access the published content.
+
+## Features
+
+- **FYC Token Display**: View brands, projects, and videos associated with FYC tokens.
+- **Automatic API Key Detection**: Identifies screener or Global Distribution API keys.
+- **Secure Authentication**: Prompts for username and password when necessary.
+
+## Best Practices
+
+- Always use server-side authentication for API key management in production environments.
+- Regularly update dependencies to ensure security and performance.
+- Follow Svelte and SvelteKit best practices for maintainable and efficient code.
+
+## Troubleshooting
+
+If you encounter any issues:
+
+1. Ensure all environment variables are correctly set.
+2. Check that you're using the correct Node.js version. (Version Should match the one specified in .nvmrc file)
+3. Clear your browser cache and restart the development server.
+
+## Support
+
+For any queries or support related to this demo or the Indee Watch 2.1 API, please contact our support team or refer to the official API documentation.
+
+## License
+
+This demo repository is licensed under the following terms.
+
+Copyright 2024 Indee Technologies Inc.,
+
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+this file except in compliance with the License. You may obtain a copy of the
+License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software distributed
+under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+CONDITIONS OF ANY KIND, either express or implied. See the License for the
+specific language governing permissions and limitations under the License.
