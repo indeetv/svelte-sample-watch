@@ -33,6 +33,22 @@ function brandsStore() {
 		}
 	};
 
+	const fetchBrandDetails = async (endpoint: string, brandKey: string, authToken: string) => {
+		const { data, error } = await fetchManager(endpoint.replace('<str:brand_key>', brandKey), {
+			method: 'GET',
+			headers: { authorization: `JWT ${authToken}` }
+		});
+
+		if (error) {
+			console.warn('Brand Details Data Fetch Failed');
+			if (error.status_code === 'W2003') {
+				loginStoreSnapshot.handleTokenExpiry();
+			}
+		} else {
+			return (data as BrandEntity).name;
+		}
+	};
+
 	const resetBrandStore = () => {
 		update(() => {
 			return {
@@ -45,7 +61,8 @@ function brandsStore() {
 	return {
 		subscribe,
 		fetchBrandData,
-		resetBrandStore
+		resetBrandStore,
+		fetchBrandDetails
 	};
 }
 

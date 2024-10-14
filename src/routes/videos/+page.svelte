@@ -10,11 +10,19 @@
 	import Loader from '../../components/Loader.svelte';
 	import { metaConfigStoreSnapshot } from '$lib/store/meta-config';
 	import ContentLoader from '../../components/ContentLoader.svelte';
+	import { projectsStoreSnapshot } from '$lib/store/projects';
 
 	let paginatedCallOngoing = false;
+	let selectedProject = '';
 
 	onMount(async () => {
 		if ($loginStoreSnapshot.authToken) {
+			selectedProject =
+				(await projectsStoreSnapshot.fetchProjectDetails(
+					`${$metaConfigStoreSnapshot.host}${$metaConfigStoreSnapshot.endpoints['watch.content.project.retrieve']}`,
+					$loginStoreSnapshot.authToken,
+					$page.url.searchParams.get('project') || ''
+				)) || '';
 			videosStoreSnapshot.resetVideoStore();
 			await videosStoreSnapshot.fetchVideoData(
 				`${$metaConfigStoreSnapshot.host}${$metaConfigStoreSnapshot.endpoints['watch.content.videos.list']}`,
@@ -41,8 +49,10 @@
 {:else}
 	<Navbar></Navbar>
 	<div class="flex flex-col items-center justify-center">
-		<div class="p-4 font-bold text-lg text-slate-600">Select a video to watch.</div>
 		<div class="w-11/12">
+			<div class="py-4 font-bold text-lg text-slate-600 self-start">
+				Selected Project : {selectedProject}
+			</div>
 			<ContentTable
 				pageToRedirect="viewing-room"
 				queryNameToAdd="video"

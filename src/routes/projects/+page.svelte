@@ -12,9 +12,16 @@
 	import ContentLoader from '../../components/ContentLoader.svelte';
 
 	let paginatedCallOngoing = false;
+	let selectedBrand = '';
 
 	onMount(async () => {
 		if ($loginStoreSnapshot.authToken) {
+			selectedBrand =
+				(await brandsStoreSnapshot.fetchBrandDetails(
+					`${$metaConfigStoreSnapshot.host}${$metaConfigStoreSnapshot.endpoints['watch.content.brand.retrieve']}`,
+					$page.url.searchParams.get('brand') || '',
+					$loginStoreSnapshot.authToken
+				)) || '';
 			projectsStoreSnapshot.resetProjectStore();
 			await projectsStoreSnapshot.fetchProjectData(
 				`${$metaConfigStoreSnapshot.host}${$metaConfigStoreSnapshot.endpoints['watch.content.project.list']}`,
@@ -41,10 +48,10 @@
 {:else}
 	<Navbar></Navbar>
 	<div class="flex flex-col items-center justify-center">
-		<div class="p-4 font-bold text-lg text-slate-600">
-			Select the project to view the videos published.
-		</div>
 		<div class="w-11/12">
+			<div class="py-4 font-bold text-lg text-slate-600 self-start">
+				Selected Brand : {selectedBrand}
+			</div>
 			<ContentTable
 				pageToRedirect="videos"
 				queryNameToAdd="project"
