@@ -1,14 +1,16 @@
-<script>
+<script lang="ts">
 	import { productConfigStoreSnapshot } from '../../lib/store/product-config';
 	import { loginStoreSnapshot } from '../../lib/store/login';
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import Loader from '../../components/Loader.svelte';
 	import { metaConfigStoreSnapshot } from '$lib/store/meta-config';
+	import type { PinCredentials, PasswordCredentials } from '../../lib/store/types/login';
 
 	let loginMode = '';
 	let email = '';
 	let password = '';
+	let inputElement: HTMLInputElement;
 
 	onMount(() => {
 		productConfigStoreSnapshot.subscribe((value) => {
@@ -22,12 +24,14 @@
 	});
 
 	const handleSubmit = () => {
-		let loginPayload = {};
+		let loginPayload: PinCredentials | PasswordCredentials = {} as
+			| PinCredentials
+			| PasswordCredentials;
 		if (loginMode === 'password') {
-			loginPayload.email = email;
-			loginPayload.password = password;
+			(loginPayload as PasswordCredentials).username = email;
+			(loginPayload as PasswordCredentials).password = password;
 		} else {
-			loginPayload.pin = password;
+			(loginPayload as PinCredentials).pin = password;
 		}
 		loginStoreSnapshot.handleLogin(
 			`${$metaConfigStoreSnapshot.host}${$metaConfigStoreSnapshot.endpoints['watch.auth.session.login']}`,
@@ -81,9 +85,12 @@
 							{$productConfigStoreSnapshot.authType === 'PWD' ? 'Password' : 'Access Code'}
 						</label>
 					</div>
-					<div class="mt-2">
+					<div class="mt-2 flex">
 						<input
 							bind:value={password}
+							bind:this={inputElement}
+							on:focusin={() => (inputElement.type = 'text')}
+							on:focusout={() => (inputElement.type = 'password')}
 							id="authKey"
 							name="authKey"
 							type="password"
