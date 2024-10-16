@@ -49,7 +49,7 @@
 {:else}
 	<Navbar></Navbar>
 	<div class="flex flex-col items-center justify-center">
-		<div class="w-11/12">
+		<div class="flex items-center justify-center flex-col p-5">
 			<div class="py-4 font-bold text-lg text-slate-600 self-start">
 				Selected Project : {selectedProject}
 			</div>
