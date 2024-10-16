@@ -14,16 +14,21 @@
 
 <nav class="bg-white border-gray-200 dark:bg-gray-900">
 	<div class="flex flex-wrap items-center justify-between mx-auto p-4">
-		<div class="flex items-center space-x-3 rtl:space-x-reverse">
+		<button
+			class="flex items-center space-x-3 rtl:space-x-reverse cursor-pointer"
+			on:click={() => {
+				goto('/brands');
+			}}
+		>
 			<img
 				src="https://indee.tv/wp-content/themes/indee/images/favicons/favicon_192x192.png"
 				class="h-8"
 				alt="Flowbite Logo"
 			/>
-			<span class="self-center text-xl font-semibold whitespace-nowrap dark:text-white">
+			<span class="self-center select-none text-xl font-semibold whitespace-nowrap dark:text-white">
 				Indee Svelte Demo App
 			</span>
-		</div>
+		</button>
 		<div class="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
 			<button
 				on:click={handleLogout}
