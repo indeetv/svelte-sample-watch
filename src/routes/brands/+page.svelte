@@ -38,17 +38,19 @@
 {:else}
 	<Navbar></Navbar>
 	<div class="flex flex-col items-center justify-center p-5">
-		<div class="p-4 font-bold text-lg text-slate-600">
-			Select the brand whose content you want to see.
+		<div class="w-11/12">
+			<div class="p-4 font-bold text-lg text-center text-slate-600">
+				Select the brand whose content you want to see.
+			</div>
+			<ContentTable
+				pageToRedirect="projects"
+				queryNameToAdd="brand"
+				tableData={$brandsStoreSnapshot.brandData}
+				on:triggerPaginationCall={handleBrandsPagination}
+				hasNextUrl={$brandsStoreSnapshot.hasNextUrl}
+				{paginatedCallOngoing}
+				loadText="Load More Brands..."
+			></ContentTable>
 		</div>
-		<ContentTable
-			pageToRedirect="projects"
-			queryNameToAdd="brand"
-			tableData={$brandsStoreSnapshot.brandData}
-			on:triggerPaginationCall={handleBrandsPagination}
-			hasNextUrl={$brandsStoreSnapshot.hasNextUrl}
-			{paginatedCallOngoing}
-			loadText="Load More Brands..."
-		></ContentTable>
 	</div>
 {/if}

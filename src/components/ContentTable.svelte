@@ -30,7 +30,7 @@
 
 <div class="overflow-x-auto">
 	<table
-		class="table-auto w-[95%] mx-auto text-sm text-center rtl:text-right text-gray-500 dark:text-gray-400"
+		class="table-auto w-full text-sm text-center rtl:text-right text-gray-500 dark:text-gray-400"
 	>
 		<thead class="text-xs text-blue-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
 			<tr>

@@ -48,32 +48,34 @@
 	<Loader></Loader>
 {:else}
 	<Navbar></Navbar>
-	<div class="mx-10">
-		<div class="py-4 font-bold text-lg text-slate-600 self-start">
-			Selected Project : {selectedProject}
+	<div class="flex flex-col items-center justify-center p-5">
+		<div class="w-11/12">
+			<div class="py-4 font-bold text-lg text-slate-600 self-start">
+				Selected Project : {selectedProject}
+			</div>
+			<ContentTable
+				pageToRedirect="viewing-room"
+				queryNameToAdd="video"
+				preserveQueryParams={`brand=${$page.url.searchParams.get('brand')}&project=${$page.url.searchParams.get('project')}`}
+				tableData={$videosStoreSnapshot.videoData.map((data) => {
+					return {
+						name: data.name,
+						key: data.key,
+						poster: data.poster,
+						'max views': data.screening_details.max_views,
+						'start date': generateDateStringFromEpoch(data.screening_details.start_date),
+						'expiry date': generateDateStringFromEpoch(data.screening_details.expiry_date),
+						expired: data.screening_details.expired,
+						'Screener Key': data.screening_details.screener_key || 'Not Generated',
+						'remaining views':
+							data.screening_details.max_views - data.screening_details.views_consumed
+					};
+				})}
+				on:triggerPaginationCall={handleVideoPagination}
+				hasNextUrl={$videosStoreSnapshot.hasVideoNextUrl}
+				{paginatedCallOngoing}
+				loadText="Load More Videos..."
+			></ContentTable>
 		</div>
-		<ContentTable
-			pageToRedirect="viewing-room"
-			queryNameToAdd="video"
-			preserveQueryParams={`brand=${$page.url.searchParams.get('brand')}&project=${$page.url.searchParams.get('project')}`}
-			tableData={$videosStoreSnapshot.videoData.map((data) => {
-				return {
-					name: data.name,
-					key: data.key,
-					poster: data.poster,
-					'max views': data.screening_details.max_views,
-					'start date': generateDateStringFromEpoch(data.screening_details.start_date),
-					'expiry date': generateDateStringFromEpoch(data.screening_details.expiry_date),
-					expired: data.screening_details.expired,
-					'Screener Key': data.screening_details.screener_key || 'Not Generated',
-					'remaining views':
-						data.screening_details.max_views - data.screening_details.views_consumed
-				};
-			})}
-			on:triggerPaginationCall={handleVideoPagination}
-			hasNextUrl={$videosStoreSnapshot.hasVideoNextUrl}
-			{paginatedCallOngoing}
-			loadText="Load More Videos..."
-		></ContentTable>
 	</div>
 {/if}
