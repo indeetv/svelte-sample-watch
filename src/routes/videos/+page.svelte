@@ -48,46 +48,32 @@
 	<Loader></Loader>
 {:else}
 	<Navbar></Navbar>
-	<div class="flex flex-col items-center justify-center">
-		<div class="flex items-center justify-center flex-col p-5">
-			<div class="py-4 font-bold text-lg text-slate-600 self-start">
-				Selected Project : {selectedProject}
-			</div>
-			<ContentTable
-				pageToRedirect="viewing-room"
-				queryNameToAdd="video"
-				preserveQueryParams={`brand=${$page.url.searchParams.get('brand')}&project=${$page.url.searchParams.get('project')}`}
-				tableData={$videosStoreSnapshot.videoData.map((data) => {
-					return {
-						name: data.name,
-						key: data.key,
-						poster: data.poster,
-						'max views': data.screening_details.max_views,
-						'start date': generateDateStringFromEpoch(data.screening_details.start_date),
-						'expiry date': generateDateStringFromEpoch(data.screening_details.expiry_date),
-						expired: data.screening_details.expired,
-						'Screener Key': data.screening_details.screener_key || 'Not Generated',
-						'remaining views':
-							data.screening_details.max_views - data.screening_details.views_consumed
-					};
-				})}
-			></ContentTable>
-			{#if $videosStoreSnapshot.hasVideoNextUrl && !paginatedCallOngoing}
-				<div class="text-center">
-					<button
-						class="text-blue-500 text-center p-5 underline underline-offset-2 cursor-pointer"
-						on:click={handleVideoPagination}
-					>
-						Load More Videos...
-					</button>
-				</div>
-			{/if}
-			{#if paginatedCallOngoing}
-				<ContentLoader></ContentLoader>
-			{/if}
-			{#if !paginatedCallOngoing && !$videosStoreSnapshot.hasVideoNextUrl}
-				<div class="mb-16"></div>
-			{/if}
+	<div class="mx-10">
+		<div class="py-4 font-bold text-lg text-slate-600 self-start">
+			Selected Project : {selectedProject}
 		</div>
+		<ContentTable
+			pageToRedirect="viewing-room"
+			queryNameToAdd="video"
+			preserveQueryParams={`brand=${$page.url.searchParams.get('brand')}&project=${$page.url.searchParams.get('project')}`}
+			tableData={$videosStoreSnapshot.videoData.map((data) => {
+				return {
+					name: data.name,
+					key: data.key,
+					poster: data.poster,
+					'max views': data.screening_details.max_views,
+					'start date': generateDateStringFromEpoch(data.screening_details.start_date),
+					'expiry date': generateDateStringFromEpoch(data.screening_details.expiry_date),
+					expired: data.screening_details.expired,
+					'Screener Key': data.screening_details.screener_key || 'Not Generated',
+					'remaining views':
+						data.screening_details.max_views - data.screening_details.views_consumed
+				};
+			})}
+			on:triggerPaginationCall={handleVideoPagination}
+			hasNextUrl={$videosStoreSnapshot.hasVideoNextUrl}
+			{paginatedCallOngoing}
+			loadText="Load More Videos..."
+		></ContentTable>
 	</div>
 {/if}

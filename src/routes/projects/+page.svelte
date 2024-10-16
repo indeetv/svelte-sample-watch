@@ -57,23 +57,11 @@
 				queryNameToAdd="project"
 				tableData={$projectsStoreSnapshot.projectData}
 				preserveQueryParams={`brand=${$page.url.searchParams.get('brand')}`}
+				on:triggerPaginationCall={handleProjectPagination}
+				hasNextUrl={$projectsStoreSnapshot.hasProjectNextUrl}
+				{paginatedCallOngoing}
+				loadText="Load More Projects..."
 			></ContentTable>
-			{#if $projectsStoreSnapshot.hasProjectNextUrl && !paginatedCallOngoing}
-				<div class="text-center">
-					<button
-						class="text-blue-500 text-center p-5 underline underline-offset-2 cursor-pointer"
-						on:click={handleProjectPagination}
-					>
-						Load More Projects...
-					</button>
-				</div>
-			{/if}
-			{#if paginatedCallOngoing}
-				<ContentLoader></ContentLoader>
-			{/if}
-			{#if !paginatedCallOngoing && !$projectsStoreSnapshot.hasProjectNextUrl}
-				<div class="mb-16"></div>
-			{/if}
 		</div>
 	</div>
 {/if}

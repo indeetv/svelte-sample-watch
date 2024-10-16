@@ -1,10 +1,17 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import { createEventDispatcher } from 'svelte';
+	import ContentLoader from './ContentLoader.svelte';
 
 	export let tableData: Array<Record<string, any>> = [];
 	export let pageToRedirect: string = '';
 	export let queryNameToAdd: string = '';
 	export let preserveQueryParams: string = '';
+	export let hasNextUrl: string = '';
+	export let paginatedCallOngoing: boolean = false;
+	export let loadText: string = 'Load More...';
+
+	const dispatch = createEventDispatcher();
 
 	const handleNameClick = (name: string) => {
 		const encodedName = encodeURIComponent(name);
@@ -15,6 +22,10 @@
 
 	const getNonNameHeaders = (item: Record<string, any>) =>
 		Object.keys(item).filter((header) => header !== 'name');
+
+	const handleLoadMoreProjects = () => {
+		dispatch('triggerPaginationCall');
+	};
 </script>
 
 <table
@@ -83,3 +94,16 @@
 		{/each}
 	</tbody>
 </table>
+{#if hasNextUrl && !paginatedCallOngoing}
+	<div class="text-center">
+		<button
+			class="text-blue-500 text-center p-5 underline underline-offset-2 cursor-pointer"
+			on:click={handleLoadMoreProjects}
+		>
+			{loadText}
+		</button>
+	</div>
+{/if}
+{#if paginatedCallOngoing}
+	<ContentLoader></ContentLoader>
+{/if}

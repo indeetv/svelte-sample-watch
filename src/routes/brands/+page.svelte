@@ -37,32 +37,18 @@
 	<Loader></Loader>
 {:else}
 	<Navbar></Navbar>
-	<div class="flex flex-col items-center justify-center">
+	<div class="flex flex-col items-center justify-center p-5">
 		<div class="p-4 font-bold text-lg text-slate-600">
 			Select the brand whose content you want to see.
 		</div>
-		<div class="w-11/12">
-			<ContentTable
-				pageToRedirect="projects"
-				queryNameToAdd="brand"
-				tableData={$brandsStoreSnapshot.brandData}
-			></ContentTable>
-			{#if $brandsStoreSnapshot.hasNextUrl && !paginatedCallOngoing}
-				<div class="text-center">
-					<button
-						class="text-blue-500 text-center p-5 underline underline-offset-2 cursor-pointer"
-						on:click={handleBrandsPagination}
-					>
-						Load More Brands...
-					</button>
-				</div>
-			{/if}
-			{#if paginatedCallOngoing}
-				<ContentLoader></ContentLoader>
-			{/if}
-			{#if !paginatedCallOngoing && !$brandsStoreSnapshot.hasNextUrl}
-				<div class="mb-16"></div>
-			{/if}
-		</div>
+		<ContentTable
+			pageToRedirect="projects"
+			queryNameToAdd="brand"
+			tableData={$brandsStoreSnapshot.brandData}
+			on:triggerPaginationCall={handleBrandsPagination}
+			hasNextUrl={$brandsStoreSnapshot.hasNextUrl}
+			{paginatedCallOngoing}
+			loadText="Load More Brands..."
+		></ContentTable>
 	</div>
 {/if}
