@@ -21,3 +21,30 @@
 {:else}
 	<Loader></Loader>
 {/if}
+
+<style lang="scss">
+	:global(body) {
+		overflow-x: hidden;
+	}
+
+	:global(*) {
+		&::-webkit-scrollbar {
+			width: 8px;
+			height: 8px;
+		}
+
+		&::-webkit-scrollbar-track {
+			border-radius: 4px;
+			background-color: #e0e0e0;
+		}
+
+		&::-webkit-scrollbar-thumb {
+			border-radius: 4px;
+			background-color: #6c6c6c;
+		}
+
+		&::-webkit-scrollbar-thumb:hover {
+			background: #555;
+		}
+	}
+</style>
