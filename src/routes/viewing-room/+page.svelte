@@ -23,7 +23,7 @@
 			playbackStoreSnapshot.resetPlaybackStore();
 			let selectedVideo = $videosStoreSnapshot.videoData.filter((data) => data.key === videoKey)[0];
 
-			if (selectedVideo.screening_details.screener_key) {
+			if (selectedVideo?.screening_details?.screener_key) {
 				screenerKey = selectedVideo.screening_details.screener_key;
 			} else {
 				if (projectKey && videoKey)
