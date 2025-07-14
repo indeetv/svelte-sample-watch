@@ -15,7 +15,7 @@ export const fetchManager = async (
 ) => {
 	const data = await fetch(url, {
 		...options,
-		headers: { ...options.headers, clientId: parseClientId(), 'content-type': 'application/json' }
+		headers: { ...options.headers, clientID: parseClientId(), 'content-type': 'application/json' }
 	});
 	let fetchedData;
 	if (!isHtml) {

@@ -58,7 +58,7 @@ function videosStore() {
 				loginStoreSnapshot.handleTokenExpiry();
 			}
 		} else {
-			return (data as VideoEntity).screening_details.screener_key;
+			return (data as VideoEntity);
 		}
 	};
 

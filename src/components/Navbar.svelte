@@ -21,7 +21,7 @@
 			}}
 		>
 			<img
-				src="https://indee.tv/wp-content/themes/indee/images/favicons/favicon_192x192.png"
+				src="/images/indee-logo/indeeLogo.webp"
 				class="h-8"
 				alt="Flowbite Logo"
 			/>
