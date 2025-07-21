@@ -11,30 +11,28 @@
 	import Loader from '../../components/Loader.svelte';
 	import { metaConfigStoreSnapshot } from '$lib/store/meta-config';
 
+	const baseUrl = PUBLIC_API_ENDPOINT || '';
 	let browserName = '';
 	let videoKey = $page.url.searchParams.get('video');
 	let projectKey = $page.url.searchParams.get('project');
 	let screenerKey = '';
+	let currentSelectedVideoDetails;
 
 	onMount(async () => {
 		parseBrowserName();
 
 		if ($loginStoreSnapshot.authToken) {
 			playbackStoreSnapshot.resetPlaybackStore();
-			let selectedVideo = $videosStoreSnapshot.videoData.filter((data) => data.key === videoKey)[0];
 
-			if (selectedVideo?.screening_details?.screener_key) {
-				screenerKey = selectedVideo.screening_details.screener_key;
-			} else {
-				if (projectKey && videoKey)
-					screenerKey =
-						(await videosStoreSnapshot.fetchVideoDetails(
+			currentSelectedVideoDetails = (await videosStoreSnapshot.fetchVideoDetails(
 							`${$metaConfigStoreSnapshot.host}${$metaConfigStoreSnapshot.endpoints['watch.content.video.retrieve']}`,
 							$loginStoreSnapshot.authToken,
 							projectKey,
 							videoKey
 						)) || '';
-			}
+			
+			screenerKey = currentSelectedVideoDetails.screening_details.screener_key;
+
 
 			await playbackStoreSnapshot.fetchEmbeddablePlayer(
 				`${$metaConfigStoreSnapshot.host}${$metaConfigStoreSnapshot.endpoints['watch.stream.player_component.retrieve']}`
@@ -56,21 +54,26 @@
 				window.initializeIndeePlayer(
 					'video_player',
 					{
-						playbackSourcesData: $playbackStoreSnapshot.playbackData,
+						playbackSourcesData: 
+						{	
+							drm: $playbackStoreSnapshot.playbackData.drm,
+							manifest: $playbackStoreSnapshot.playbackData.manifest,
+							defaultSubtitle: currentSelectedVideoDetails.subtitles[0]?.label || ''
+						},
 						playbackMode: browserName.toLowerCase() !== 'chrome' ? 'hls' : 'dash',
-						overlayWatermarkDetails: selectedVideo.overlay_watermark_details,
+						overlayWatermarkDetails: currentSelectedVideoDetails.overlay_watermark_details,
 						savePlayerPreferences: true,
 						resumeDetails: {
-							from_second: selectedVideo.resume_playback?.from_second || 0,
-							duration_in_sec: selectedVideo.duration_in_sec
+							from_second: currentSelectedVideoDetails.resume_playback?.from_second || 0,
+							duration_in_sec: currentSelectedVideoDetails.duration_in_sec
 						},
 						engagementData: {
 							push_interval: $playbackStoreSnapshot.playbackData.engagement.push_interval,
-							endpointUrl: `${PUBLIC_API_ENDPOINT}stream/view-engagement?`
+							endpointUrl: baseUrl+$metaConfigStoreSnapshot.endpoints['watch.stream.view_engagement.record'] + '?'
 						}
 					},
 					$playbackStoreSnapshot.embeddablePlayerData,
-					selectedVideo.key,
+					currentSelectedVideoDetails.key,
 					{ autoPlay: true }
 				);
 			}
